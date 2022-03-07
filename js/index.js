@@ -1,4 +1,4 @@
-
+// Variable Declaration
 let uniform_grid = document.getElementById("uniform");
 let water_fall_grid = document.getElementById("water-fall");
 let dropdown_title = document.getElementsByClassName("dropdown_title");
@@ -16,6 +16,7 @@ let data_header_right_dropdown = document.getElementById(
 );
 let right_left_title = document.getElementById("data_header_right_left_title");
 let left_title = document.getElementById("left_title");
+
 // Event Listeners
 
 data_header_left_main.addEventListener("click", () => {
@@ -69,7 +70,7 @@ for (let i = 0; i < dropdown_title.length; i++) {
   });
 }
 
-// API client details
+// Imgur API client details
 
 var clientId = "fbac8857f6f0770";
 
@@ -100,6 +101,16 @@ localStorage.setItem("grid_stat", JSON.stringify(grid_status));
 
 // Data fetching from api
 
+// Fetching Default Tags
+let tags = [];
+fetch("https://api.imgur.com/3/tags", requestOptions)
+  .then((response) => response.json())
+  .then((result) => {
+    tags = [...result.data.tags];
+    // console.log("tags:", tags);
+  })
+  .catch((error) => console.log("error", error));
+
 getData(grid_status, (q = "memes"));
 
 function getData(grid_status, q) {
@@ -121,7 +132,7 @@ function getData(grid_status, q) {
     .catch((error) => console.log("error", error));
 }
 
-// Water-fall display
+// Water-fall Grid display
 function displayWaterfall(data) {
   display_content.innerText = "";
 
@@ -224,6 +235,7 @@ function displayData(data, display_content) {
   });
 }
 
+// event listeners
 uniform_grid.addEventListener("click", () => {
   uniform_grid.classList.remove("show");
   uniform_grid.classList.add("hide");
@@ -245,3 +257,116 @@ water_fall_grid.addEventListener("click", () => {
   let q = localStorage.getItem("search_query");
   getData(grid_status, q);
 });
+
+function debounce() {
+  let input = document.getElementById("input").value;
+  let showSearch = document.getElementById("showSearchBar");
+  if (!input) {
+    showSearch.classList.remove("searchBar");
+
+    showSearch.classList.add("searchBarhide");
+  } else {
+    showSearch.classList.remove("searchBarhide");
+
+    showSearch.classList.add("searchBar");
+  }
+
+  let name1 = document.getElementsByClassName("name_1");
+  let name2 = document.getElementsByClassName("name_2");
+
+  let result = tags.filter((item) => {
+    return item.name.startsWith(`${input}`);
+  });
+  if (result.length !== 0) {
+    for (var i = 0; i < name1.length; i++) {
+      if (!result[i]) {
+        name1[i].textContent = `${result[0].name}`;
+      } else {
+        name1[i].textContent = `${result[i].name}`;
+      }
+    }
+    for (var i = 0; i < name2.length; i++) {
+      if (!result[i]) {
+        name2[i].textContent = `${result[0].name}`;
+      } else {
+        name2[i].textContent = `${result[i].name}`;
+      }
+    }
+  } else {
+    for (var i = 0; i < 3; i++) {
+      name1[i].textContent = "nothing found";
+      name2[i].textContent = "nothing found";
+    }
+  }
+}
+
+// Listener for search dropdown
+let name2 = document.getElementsByClassName("name_2");
+
+for (let i = 0; i < name2.length; i++) {
+  name2[i].addEventListener("click", () => {
+    let tagName = name2[i].textContent;
+    let showSearch = document.getElementById("showSearchBar");
+    let input = document.getElementById("input");
+
+    showSearch.classList.remove("searchBar");
+
+    showSearch.classList.add("searchBarhide");
+
+    input.value = "";
+
+    fetch(`https://api.imgur.com/3/gallery/t/${tagName}`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        localStorage.setItem("search_query", q);
+        fetchedData = [...result.data.items];
+        localStorage.setItem("savedData", JSON.stringify(fetchedData));
+
+        if (grid_status === "water-fall") {
+          displayWaterfall(result.data.items);
+        }
+        if (grid_status === "uniform") {
+          displayUniform(result.data.items);
+        }
+      })
+      .catch((error) => console.log("error", error));
+  });
+}
+
+// For more Tags displaying the block
+
+let tag = document.getElementsByClassName("moreTags")[0];
+let tag2 = document.getElementById("lessTags2");
+tag.addEventListener("click", () => {
+  let more = tag.textContent;
+  if (more == "MORE TAGS +") {
+    tag.textContent = "LESS TAGS x";
+    tag2.className = "tagContainer2";
+    tag2.style.display = "flex";
+    tag2.style.justifyContent = "space-between";
+    tag2.style.marginTop = "10px";
+  } else {
+    tag.textContent = "MORE TAGS +";
+    tag2.className = "raj";
+    tag2.style.display = "none";
+  }
+  console.log(tag2);
+  tag2.classList.toggle("tagContainer2");
+});
+
+//header sticky functionality
+
+var header = document.getElementById("header");
+var sticky = header.offsetTop;
+
+window.onscroll = function () {
+  myFunction();
+};
+
+function myFunction() {
+  if (window.pageYOffset >= sticky) {
+    header.classList.add("sticky");
+  } else {
+    header.classList.remove("sticky");
+  }
+}
