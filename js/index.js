@@ -358,6 +358,7 @@ tag.addEventListener("click", () => {
 
 var header = document.getElementById("header");
 var sticky = header.offsetTop;
+console.log("sticky:", sticky);
 
 window.onscroll = function () {
   myFunction();

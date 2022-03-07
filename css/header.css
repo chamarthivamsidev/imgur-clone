@@ -6,10 +6,11 @@
   background-size: cover;
 }
 #header {
-  height: 20px;
+  height: 60px;
   width: 100%;
   /* border:1px solid coral; */
-
+  background-image: url(https://s.imgur.com/desktop-assets/desktop-assets/homebg.e52b5cdf24f83bcd55f9f1318855f2ef.png);
+  background-size: cover;
   display: flex;
   justify-content: space-between;
   margin: 0;
@@ -194,7 +195,8 @@ form.example input[type="text"] {
   background: hsla(0, 0%, 100%, 0.25);
   margin: auto;
   border: 1px solid transparent;
-  border-radius: 2px;
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
   outline: none;
 }
 input::-webkit-input-placeholder {
@@ -209,7 +211,7 @@ input::-webkit-input-placeholder {
 form.example button {
   /* float: left; */
   width: 15%;
-  padding: 6px;
+  padding: 5.8px;
   background: hsla(0, 0%, 100%, 0.25);
   color: white;
   border: none;
