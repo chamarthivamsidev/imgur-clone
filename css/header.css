@@ -82,6 +82,7 @@
   background-color: #2e3035;
   border-radius: 3px;
   position: absolute;
+  z-index: 1000;
 }
 .searchBarhide {
   display: none;
